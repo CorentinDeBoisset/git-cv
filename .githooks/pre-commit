@@ -1,0 +1,38 @@
+#!/bin/bash
+
+REPO_DIR=$(git rev-parse --show-toplevel)
+
+GOLANGCILINT="$(which golangci-lint)"
+
+# Check for golint
+if [[ ! -x "$GOLANGCILINT" ]]; then
+  printf "\t\033[41mPlease install golangci-lint\033[0m"
+  exit 1
+fi
+
+PASS=true
+
+$GOLANGCILINT run "$REPO_DIR/..." > /dev/null 2>&1
+if [[ $? == 1 ]]; then
+  printf "\tgolangci-lint run ./...  \033[0;30m\033[41mFAILURE!\033[0m\n"
+  PASS=false
+else
+  printf "\tgolangci-lint run ./...  \033[0m\033[0;30m\033[42mpass\033[0m\n"
+fi
+
+go test "$REPO_DIR/..." > /dev/null 2>&1
+if [[ $? != 0 ]]; then
+  printf "\tgo test ./...            \033[0m\033[0;30m\033[41mFAILURE!\033[0m\n"
+  PASS=false
+else
+  printf "\tgo test ./...            \033[0m\033[0;30m\033[42mpass\033[0m\n"
+fi
+
+if ! $PASS; then
+  printf "\n\033[0;30m\033[41mCOMMIT FAILED\033[0m\n"
+  exit 1
+else
+  printf "\n\033[0;30m\033[42mCOMMIT SUCCEEDED\033[0m\n"
+fi
+
+exit 0
