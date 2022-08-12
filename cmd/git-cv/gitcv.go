@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/corentindeboisset/git-cv/pkg/cmtbuilder"
+	"github.com/corentindeboisset/git-cv/pkg/gitadapter"
 	"github.com/spf13/pflag"
 )
 
@@ -53,7 +55,38 @@ func main() {
 		return
 	}
 
-	fmt.Print("all right\n")
+	curDir, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("An error occured: %v\n", err)
+		os.Exit(1)
+		return
+	}
 
-	// Use the parsed arguments
+	if err := gitadapter.CheckRepo(curDir); err != nil {
+		fmt.Printf("An error occured: %v\n", err)
+		os.Exit(1)
+		return
+	}
+
+	// TODO: check there are files to commit (or that the allow-empty flag is on)
+
+	if err := gitadapter.PrecommitHook(); err != nil {
+		fmt.Printf("An error occured: %v\n", err)
+		os.Exit(1)
+		return
+	}
+
+	title, body, err := cmtbuilder.PromptCommit()
+	if err != nil {
+		fmt.Printf("An error occured: %v\n", err)
+		os.Exit(1)
+		return
+	}
+
+	// TODO: add the parsed arguments into the git command
+	if err := gitadapter.CreateCommit(title, body); err != nil {
+		fmt.Printf("An error occured: %v\n", err)
+		os.Exit(1)
+		return
+	}
 }
