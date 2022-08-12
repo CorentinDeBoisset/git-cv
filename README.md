@@ -1,6 +1,8 @@
 # git-cv
 
-Tool to make commits that follow a convention - such as conventionnal commits
+Tool to make commits that follow a convention - such as conventionnal commits.
+
+It is intended as a lightweight drop-in replacement of the [commitizen CLI](https://github.com/commitizen/cz-cli), without requiring a whole Nodejs setup.
 
 ## ❯ Install
 
