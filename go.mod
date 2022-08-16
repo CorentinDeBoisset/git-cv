@@ -3,7 +3,7 @@ module github.com/corentindeboisset/git-cv
 go 1.19
 
 require (
-	github.com/corentindeboisset/styledconsole v0.2.3
+	github.com/corentindeboisset/styledconsole v0.2.4
 	github.com/spf13/pflag v1.0.5
 )
 
